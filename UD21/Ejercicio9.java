@@ -24,6 +24,7 @@ public class Ejercicio9 extends JFrame {
 	public static Color color1 = null;
 	public static Color color2 = null;	
 	public static int giradas = 0;
+	public static JToggleButton[] selected = new JToggleButton[2];
 //	public static JToggleButton firstClick = null;
 //	public static JToggleButton secondClick = null;
 	
@@ -136,34 +137,36 @@ public class Ejercicio9 extends JFrame {
 		distribution = getDistribution(colores);
 		asignarColores(botonesList, distribution);
 		
-		//No se ha conseguido implementar la lógica de forma correcta
+		//Posible implementacion mejorada pero todavia no funciona
+		//revisar bucle 3 y 4
 		ActionListener checkPairs = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				giradas++; //cartas giradas se inicia a 0. Cuando se hace un click pasa a ser 1
-				if (giradas == 2) { //Con el segundo click pasa a ser 2
-					JToggleButton par1 = null, par2 = null; //Se crean 2 referencias a JToggleButton
-					int index1 = -1, index2 = -1; //Indice del array donde estan almacenados los botones
-					for (int i=0; i < botonesList.size(); i++) {
-						if (botonesList.get(i).isEnabled() && !(botonesList.get(i).isSelected())) {
-							par1 = botonesList.get(i); //Se asigna el primer boton habilitado y clicado
-							index1=i;//se guarda el indice del array
-						}
-						if (botonesList.get(i).isEnabled() && !(botonesList.get(i).isSelected()) && !(botonesList.get(i).equals(par1))) {
-							par2 = botonesList.get(i); //igual con el segundo
-							index2 = i;
-						}
-					}
-					if (par1.getBackground().equals(par2.getBackground())) {//Si los 2 botones del array tienen el mismo color se inhabilitan
-						botonesList.get(index1).setEnabled(false);
-						botonesList.get(index2).setEnabled(false);
-						giradas = 0; //vuelve a haber 0 cartas giradas
-					} else {
-						botonesList.get(index1).setSelected(true);//Si no coinciden en color se vuelven a clicar
-						botonesList.get(index2).setSelected(true);
-						giradas = 0; //vuelve a haber 0 cartas giradas
-						
+				if (giradas == 0) {
+					JToggleButton source = (JToggleButton)e.getSource();
+					selected[giradas] = source;
+					giradas++;
+					System.out.println("cond. 1");
+				}
+				else if (giradas == 1) {
+					JToggleButton source = (JToggleButton)e.getSource();
+					selected[giradas] = source;
+					giradas++;
+					System.out.println("cond. 2");
+					
+					if (giradas == 2) { //comprobar
+						if (selected[0].getBackground().equals(selected[1].getBackground())) {
+							selected[0].setEnabled(false);
+							selected[1].setEnabled(false);
+							giradas = 0;
+							System.out.println("cond. 3");
+						} else {
+							selected[0].setSelected(true);
+							selected[1].setSelected(false);
+							giradas = 0;
+							System.out.println("cond. 4");
+						}	
 					}
 				}
 			}
